@@ -2,6 +2,8 @@
 
 > Offline peer-to-peer chat and file sharing for devices on the same local network.
 
+<img width="3072" height="1582" alt="image" src="https://github.com/user-attachments/assets/16da443a-b9a4-4979-9129-c2ed7364031e" />
+
 
 <img width="3072" height="1582" alt="image" src="https://github.com/user-attachments/assets/ce397c1c-209a-4f18-ad7b-a3fa42451560" />
 
