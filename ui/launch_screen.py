@@ -29,7 +29,7 @@ class LaunchScreen(QWidget):
 
         # Card widget
         card = QWidget()
-        card.setFixedWidth(420)
+        card.setFixedWidth(500)
         card.setStyleSheet("""
             QWidget {
                 background-color: #181825;
@@ -61,7 +61,7 @@ class LaunchScreen(QWidget):
         self.name_input = QLineEdit()
         self.name_input.setPlaceholderText("Your name")
         self.name_input.setMaxLength(32)
-        self.name_input.setFixedHeight(40)
+        self.name_input.setFixedHeight(52)
         self.name_input.setStyleSheet(self._input_style())
         card_layout.addWidget(self.name_input)
 
@@ -69,7 +69,7 @@ class LaunchScreen(QWidget):
         self.room_input = QLineEdit()
         self.room_input.setPlaceholderText("Room code (e.g. 482901)")
         self.room_input.setMaxLength(20)
-        self.room_input.setFixedHeight(40)
+        self.room_input.setFixedHeight(52)
         self.room_input.setStyleSheet(self._input_style())
         self.room_input.returnPressed.connect(self._on_join_clicked)
         card_layout.addWidget(self.room_input)
@@ -78,13 +78,13 @@ class LaunchScreen(QWidget):
 
         # Join button
         join_btn = QPushButton("Join Room")
-        join_btn.setFixedHeight(42)
+        join_btn.setFixedHeight(54)
         join_btn.setStyleSheet("""
             QPushButton {
                 background-color: #89b4fa;
                 color: #1e1e2e;
                 border-radius: 8px;
-                font-size: 14px;
+                font-size: 15pt;
                 font-weight: bold;
             }
             QPushButton:hover {
@@ -111,7 +111,7 @@ class LaunchScreen(QWidget):
                 border: 1px solid #45475a;
                 border-radius: 8px;
                 padding: 8px 12px;
-                font-size: 13px;
+                font-size: 15pt;
             }
             QLineEdit:focus {
                 border: 1px solid #89b4fa;

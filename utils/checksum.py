@@ -1,10 +1,10 @@
 import hashlib
 
 
-def get_checksum(filepath: str) -> str:
-    """Returns MD5 hash of a file as a hex string."""
-    md5 = hashlib.md5()
+def get_checksum(filepath: str, chunk_size: int = 4096) -> str:
+    """Returns SHA-256 checksum of a file as a hex string."""
+    digest = hashlib.sha256()
     with open(filepath, "rb") as f:
-        while chunk := f.read(4096):
-            md5.update(chunk)
-    return md5.hexdigest()
+        while chunk := f.read(chunk_size):
+            digest.update(chunk)
+    return digest.hexdigest()

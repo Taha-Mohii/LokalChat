@@ -33,7 +33,7 @@ class DMScreen(QWidget):
 
     def _build_ui(self):
         self.setWindowTitle(f"DM — {self.peer_name}")
-        self.setMinimumSize(500, 450)
+        self.setMinimumSize(650, 550)
         self.setStyleSheet("background-color: #1e1e2e;")
 
         layout = QVBoxLayout()
@@ -51,7 +51,7 @@ class DMScreen(QWidget):
         header_layout.addWidget(peer_label)
 
         ip_label = QLabel(self.peer_ip)
-        ip_label.setStyleSheet("color: #6c7086; font-size: 11px;")
+        ip_label.setStyleSheet("color: #6c7086; font-size: 12pt;")
         ip_label.setAlignment(Qt.AlignRight)
         header_layout.addWidget(ip_label)
 
@@ -82,13 +82,14 @@ class DMScreen(QWidget):
 
         # File button
         file_btn = QPushButton("📎")
-        file_btn.setFixedSize(40, 40)
+        file_btn.setFixedSize(118, 56)
+        file_btn.setText("Share file")
         file_btn.setStyleSheet("""
             QPushButton {
                 background-color: #45475a;
                 color: #cdd6f4;
                 border-radius: 8px;
-                font-size: 16px;
+                font-size: 13pt;
             }
             QPushButton:hover {
                 background-color: #585b70;
@@ -107,7 +108,7 @@ class DMScreen(QWidget):
                 border: none;
                 border-radius: 8px;
                 padding: 10px;
-                font-size: 14px;
+                font-size: 16pt;
             }
         """)
         self.text_input.returnPressed.connect(self._on_send_clicked)
@@ -115,14 +116,14 @@ class DMScreen(QWidget):
 
         # Send button
         send_btn = QPushButton("Send")
-        send_btn.setFixedWidth(80)
+        send_btn.setFixedSize(100, 56)
         send_btn.setStyleSheet("""
             QPushButton {
                 background-color: #89b4fa;
                 color: #1e1e2e;
                 border-radius: 8px;
                 padding: 10px;
-                font-size: 14px;
+                font-size: 15pt;
                 font-weight: bold;
             }
             QPushButton:hover {
@@ -157,16 +158,16 @@ class DMScreen(QWidget):
         bubble_layout.setContentsMargins(8, 6, 8, 6)
 
         name_label = QLabel(from_name)
-        name_label.setStyleSheet("color: #89b4fa; font-size: 11px; font-weight: bold;")
+        name_label.setStyleSheet("color: #89b4fa; font-size: 13pt; font-weight: bold;")
         bubble_layout.addWidget(name_label)
 
         text_label = QLabel(text)
         text_label.setWordWrap(True)
-        text_label.setStyleSheet("color: #cdd6f4; font-size: 13px;")
+        text_label.setStyleSheet("color: #cdd6f4; font-size: 17pt;")
         bubble_layout.addWidget(text_label)
 
         time_label = QLabel(timestamp)
-        time_label.setStyleSheet("color: #6c7086; font-size: 10px;")
+        time_label.setStyleSheet("color: #6c7086; font-size: 11pt;")
         bubble_layout.addWidget(time_label)
 
         bubble.setLayout(bubble_layout)

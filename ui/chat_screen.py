@@ -1,5 +1,4 @@
 import os
-import threading
 from PyQt5.QtWidgets import (
     QWidget,
     QVBoxLayout,
@@ -33,7 +32,7 @@ class ChatScreen(QWidget):
 
     def _build_ui(self):
         self.setWindowTitle(f"LocalChat — Room {self.room_code}")
-        self.setMinimumSize(700, 550)
+        self.setMinimumSize(900, 650)
         self.setStyleSheet("background-color: #1e1e2e; font-family: Arial;")
 
         main_layout = QHBoxLayout()
@@ -48,7 +47,7 @@ class ChatScreen(QWidget):
 
         # Header
         header = QWidget()
-        header.setFixedHeight(56)
+        header.setMinimumHeight(76)
         header.setStyleSheet(
             "background-color: #181825; border-bottom: 1px solid #313244;"
         )
@@ -56,16 +55,21 @@ class ChatScreen(QWidget):
         header_layout.setContentsMargins(20, 0, 20, 0)
 
         room_label = QLabel(f"🔒  Room: {self.room_code}")
-        room_label.setFont(QFont("Arial", 15, QFont.Bold))
+        room_label.setFont(QFont("Arial", 18, QFont.Bold))
         room_label.setStyleSheet("color: #cdd6f4;")
         header_layout.addWidget(room_label)
 
         header_layout.addStretch()
 
         self.peers_label = QLabel("● 0 peers")
-        self.peers_label.setFont(QFont("Arial", 12))
+        self.peers_label.setFont(QFont("Arial", 15))
         self.peers_label.setStyleSheet("color: #a6e3a1;")
         header_layout.addWidget(self.peers_label)
+
+        self.host_label = QLabel("Host: choosing")
+        self.host_label.setFont(QFont("Arial", 14))
+        self.host_label.setStyleSheet("color: #f9e2af;")
+        header_layout.insertWidget(1, self.host_label)
 
         header.setLayout(header_layout)
         chat_layout.addWidget(header)
@@ -92,7 +96,7 @@ class ChatScreen(QWidget):
 
         # Input area
         input_area = QWidget()
-        input_area.setFixedHeight(72)
+        input_area.setFixedHeight(92)
         input_area.setStyleSheet(
             "background-color: #181825; border-top: 1px solid #313244;"
         )
@@ -101,14 +105,15 @@ class ChatScreen(QWidget):
         input_layout.setSpacing(10)
 
         file_btn = QPushButton("📎")
-        file_btn.setFixedSize(46, 46)
+        file_btn.setFixedSize(118, 60)
+        file_btn.setText("Share file")
         file_btn.setCursor(Qt.PointingHandCursor)
         file_btn.setStyleSheet("""
             QPushButton {
                 background-color: #313244;
                 color: #cdd6f4;
                 border-radius: 10px;
-                font-size: 18px;
+                font-size: 14pt;
                 border: none;
             }
             QPushButton:hover { background-color: #45475a; }
@@ -118,7 +123,7 @@ class ChatScreen(QWidget):
 
         self.text_input = QLineEdit()
         self.text_input.setPlaceholderText("Type a message...")
-        self.text_input.setFixedHeight(46)
+        self.text_input.setFixedHeight(60)
         self.text_input.setStyleSheet("""
             QLineEdit {
                 background-color: #313244;
@@ -126,7 +131,7 @@ class ChatScreen(QWidget):
                 border: 1px solid #45475a;
                 border-radius: 10px;
                 padding: 0px 16px;
-                font-size: 15px;
+                font-size: 17pt;
             }
             QLineEdit:focus { border: 1px solid #89b4fa; }
         """)
@@ -134,14 +139,14 @@ class ChatScreen(QWidget):
         input_layout.addWidget(self.text_input)
 
         send_btn = QPushButton("Send")
-        send_btn.setFixedSize(90, 46)
+        send_btn.setFixedSize(104, 60)
         send_btn.setCursor(Qt.PointingHandCursor)
         send_btn.setStyleSheet("""
             QPushButton {
                 background-color: #89b4fa;
                 color: #1e1e2e;
                 border-radius: 10px;
-                font-size: 14px;
+                font-size: 15pt;
                 font-weight: bold;
                 border: none;
             }
@@ -159,7 +164,7 @@ class ChatScreen(QWidget):
 
         # ── Right: peer list panel ───────────────────────────
         self.peer_panel = QWidget()
-        self.peer_panel.setFixedWidth(200)
+        self.peer_panel.setFixedWidth(260)
         self.peer_panel.setStyleSheet(
             "background-color: #181825; border-left: 1px solid #313244;"
         )
@@ -169,8 +174,8 @@ class ChatScreen(QWidget):
         peer_panel_layout.setSpacing(0)
 
         panel_header = QLabel("  Peers")
-        panel_header.setFixedHeight(56)
-        panel_header.setFont(QFont("Arial", 13, QFont.Bold))
+        panel_header.setMinimumHeight(68)
+        panel_header.setFont(QFont("Arial", 16, QFont.Bold))
         panel_header.setStyleSheet("""
             color: #6c7086;
             background-color: #181825;
@@ -211,9 +216,7 @@ class ChatScreen(QWidget):
             self, "Select File", os.path.expanduser("~"), "All Files (*.*)"
         )
         if filepath:
-            threading.Thread(
-                target=self.on_send_file, args=(filepath,), daemon=True
-            ).start()
+            self.on_send_file(filepath)
 
     def add_message(
         self, from_name: str, text: str, timestamp: str, is_self: bool = False
@@ -226,20 +229,20 @@ class ChatScreen(QWidget):
 
         name_label = QLabel(from_name)
         name_label.setStyleSheet(
-            "color: #89b4fa; font-size: 12px; font-weight: bold; background: transparent;"
+            "color: #89b4fa; font-size: 13pt; font-weight: bold; background: transparent;"
         )
         bubble_layout.addWidget(name_label)
 
         text_label = QLabel(text)
         text_label.setWordWrap(True)
         text_label.setStyleSheet(
-            "color: #cdd6f4; font-size: 15px; background: transparent;"
+            "color: #cdd6f4; font-size: 18pt; background: transparent;"
         )
         bubble_layout.addWidget(text_label)
 
         time_label = QLabel(timestamp)
         time_label.setStyleSheet(
-            "color: #6c7086; font-size: 11px; background: transparent;"
+            "color: #6c7086; font-size: 11pt; background: transparent;"
         )
         bubble_layout.addWidget(time_label)
 
@@ -277,19 +280,19 @@ class ChatScreen(QWidget):
 
         name_label = QLabel(f"👤 {name}")
         name_label.setStyleSheet(
-            "color: #cdd6f4; font-size: 13px; font-weight: bold; background: transparent;"
+            "color: #cdd6f4; font-size: 14pt; font-weight: bold; background: transparent;"
         )
         peer_layout.addWidget(name_label)
 
         dm_btn = QPushButton("DM")
-        dm_btn.setFixedHeight(28)
+        dm_btn.setMinimumHeight(40)
         dm_btn.setCursor(Qt.PointingHandCursor)
         dm_btn.setStyleSheet("""
             QPushButton {
                 background-color: #89b4fa;
                 color: #1e1e2e;
                 border-radius: 6px;
-                font-size: 12px;
+                font-size: 13pt;
                 font-weight: bold;
                 border: none;
             }
@@ -314,9 +317,15 @@ class ChatScreen(QWidget):
         color = "#a6e3a1" if count > 0 else "#f38ba8"
         self.peers_label.setStyleSheet(f"color: {color};")
 
+    def set_host(self, text: str, is_self: bool = False):
+        self.host_label.setText(f"★ {text}")
+        self.host_label.setStyleSheet(
+            "color: #f9e2af; font-weight: bold;" if is_self else "color: #a6adc8;"
+        )
+
     def add_notification(self, text: str):
         """Shows a system message in chat like 'Arjun joined'."""
         label = QLabel(text)
         label.setAlignment(Qt.AlignCenter)
-        label.setStyleSheet("color: #6c7086; font-size: 12px; padding: 4px;")
+        label.setStyleSheet("color: #a6adc8; font-size: 13pt; padding: 8px;")
         self.chat_layout.addWidget(label)

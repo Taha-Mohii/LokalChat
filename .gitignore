@@ -1,21 +1,21 @@
-# Personal config
-LocalChat/config.json
+# Local device identity and state
+config.json
+storage/*.db
+storage/*.db-shm
+storage/*.db-wal
 
-# Python cache
-__pycache__/
-*.pyc
-*.pyo
-
-# Database (personal message history)
-*.db
-
-# VS Code
-.vscode/
-
-# OS files
-.DS_Store
-Thumbs.dbshared/*
+# Runtime files
 downloads/*
-storage/localchat.db
+!downloads/.gitkeep
+*.part
+
+# Python
 __pycache__/
-*.pyc
+*.py[cod]
+.venv/
+
+# Editors and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

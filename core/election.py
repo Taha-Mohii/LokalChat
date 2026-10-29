@@ -1,52 +1,40 @@
 import threading
 
+
 class Election:
-    def __init__(self, device_id: str, peer_manager, client, on_elected):
-        """
-        device_id   → this peer's unique ID (from config)
-        peer_manager → PeerManager instance
-        client      → Client instance for sending messages
-        on_elected  → callback fired when this peer becomes host
-        """
+    """Deterministic local host choice using advertised device IDs."""
+    def __init__(self, device_id: str, peer_manager, client, on_elected,
+                 on_change=None):
         self.device_id = device_id
         self.peer_manager = peer_manager
         self.client = client
         self.on_elected = on_elected
+        self.on_change = on_change or (lambda host_id: None)
         self.is_host = False
+        self.host_id = ""
         self._lock = threading.Lock()
 
     def run(self):
-        """
-        Compare our device_id against all known peers.
-        Highest ID wins and becomes host.
-        """
-
         peers = self.peer_manager.get_peers()
-
-        # If no peers, we are automatically host
-        if not peers:
-            self._become_host()
-            return
-
-        # Check if our ID is highest
-        all_ids = list(peers.keys()) + [self.device_id]
-        if max(all_ids) == self.device_id:
-            self._become_host()
+        ids = [p.get("device_id") for p in peers.values() if p.get("device_id")]
+        chosen = self.device_id == max([self.device_id] + ids)
+        with self._lock:
+            changed_to_host = chosen and not self.is_host
+            changed = self.host_id != max([self.device_id] + ids)
+            self.is_host = chosen
+            self.host_id = max([self.device_id] + ids)
+        if changed_to_host:
+            self.on_elected()
+        if changed:
+            self.on_change(self.host_id)
 
     def _become_host(self):
-        with self._lock:
-            if not self.is_host:
-                self.is_host = True
-                print("[Election] This peer is now the HOST")
-                self.on_elected()
+        self.run()
 
-    def is_current_host(self)-> bool:
+    def is_current_host(self) -> bool:
         return self.is_host
 
     def reset(self):
-        """Called when host leaves — trigger re-election."""
-
         with self._lock:
             self.is_host = False
-        print("[Election] Host left — re-running election")
         self.run()
