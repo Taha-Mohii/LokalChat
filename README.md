@@ -1,4 +1,4 @@
-# LokalChat
+# LocalChat
 
 > Offline peer-to-peer chat and file sharing for devices on the same local network.
 
